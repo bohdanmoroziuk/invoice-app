@@ -4,7 +4,10 @@
     <navigation />
     <div class="content flex flex-column">
       <router-view />
-      <invoice-modal v-if="modal" />
+
+      <transition name="invoice">
+        <invoice-modal v-if="modal" />
+      </transition>
     </div>
   </div>
 </template>
@@ -63,4 +66,14 @@ export default {
     position: relative;
   }
 }
+
+.invoice-enter-active,
+.invoice-leave-active {
+  transition: 0.8s ease all;
+}
+.invoice-enter-from,
+.invoice-leave-to {
+  transform: translateX(-700px);
+}
+
 </style>
