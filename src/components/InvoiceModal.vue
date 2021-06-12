@@ -198,6 +198,14 @@ export default {
   },
   methods: {
     ...mapMutations('invoices', ['closeModal']),
+
+    generateInvoiceDate() {
+      this.invoiceDateUnix = Date.now();
+      this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString('uk', this.dateOptions);
+    },
+  },
+  created() {
+    this.generateInvoiceDate();
   },
 };
 </script>
