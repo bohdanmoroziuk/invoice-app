@@ -94,7 +94,7 @@
 
         <div class="input flex flex-column">
           <label for="paymentTerms">Payment Terms</label>
-          <select id="paymentTerms" v-model="paymentTerms">
+          <select id="paymentTerms" v-model.number="paymentTerms">
             <option value="30">Net 30 Days</option>
             <option value="60">Net 60 Days</option>
           </select>
@@ -186,7 +186,7 @@ export default {
       clientCountry: null,
       invoiceDateUnix: null,
       invoiceDate: null,
-      paymentTerms: null,
+      paymentTerms: 30,
       paymentDueDateUnix: null,
       paymentDueDate: null,
       productDescription: null,
@@ -196,12 +196,27 @@ export default {
       invoiceTotal: 0,
     };
   },
+  watch: {
+    paymentTerms: {
+      immediate: true,
+      handler: 'generatePaymentDueDate',
+    },
+  },
   methods: {
     ...mapMutations('invoices', ['closeModal']),
 
+    formatDate(value) {
+      return new Date(value).toLocaleDateString('uk', this.dateOptions);
+    },
     generateInvoiceDate() {
       this.invoiceDateUnix = Date.now();
-      this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString('uk', this.dateOptions);
+      this.invoiceDate = this.formatDate(this.invoiceDateUnix);
+    },
+    generatePaymentDueDate() {
+      const futureDate = new Date();
+
+      this.paymentDueDateUnix = futureDate.setDate(futureDate.getDate() + this.paymentTerms);
+      this.paymentDueDate = this.formatDate(this.paymentDueDateUnix);
     },
   },
   created() {
