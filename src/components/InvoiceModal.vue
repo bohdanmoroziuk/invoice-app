@@ -123,10 +123,10 @@
                 <input type="text" v-model.trim="item.name">
               </td>
               <td class="qty">
-                <input type="text" v-model.trim="item.qty">
+                <input type="text" v-model.number="item.qty">
               </td>
               <td class="price">
-                <input type="text" v-model.trim="item.price">
+                <input type="text" v-model.number="item.price">
               </td>
               <td class="total flex">
                 ${{ item.total = item.qty * item.price }}
@@ -162,6 +162,8 @@
 
 <script>
 import { mapMutations } from 'vuex';
+
+import { nanoid } from 'nanoid';
 
 export default {
   name: 'InvoiceModal',
@@ -217,6 +219,18 @@ export default {
 
       this.paymentDueDateUnix = futureDate.setDate(futureDate.getDate() + this.paymentTerms);
       this.paymentDueDate = this.formatDate(this.paymentDueDateUnix);
+    },
+    addNewInvoiceItem() {
+      this.invoiceItemList.push({
+        id: nanoid(),
+        name: '',
+        qty: 0,
+        price: 0,
+        total: 0,
+      });
+    },
+    deleteInvoiceItem(id) {
+      this.invoiceItemList = this.invoiceItemList.filter((item) => item.id !== id);
     },
   },
   created() {
