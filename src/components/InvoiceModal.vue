@@ -210,6 +210,8 @@ export default {
   width: 100%;
   height: 100vh;
   overflow: scroll;
+  -ms-overflow-style: none; /* IE 11 */
+  scrollbar-width: none; /* Firefox 64 */
 
   &::-webkit-scrollbar {
     display: none;
