@@ -4,12 +4,16 @@
     <navigation />
     <div class="content flex flex-column">
       <router-view />
+      <invoice-modal v-if="modal" />
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import Navigation from '@/components/Navigation.vue';
+import InvoiceModal from '@/components/InvoiceModal.vue';
 import MobileMessage from '@/components/MobileMessage.vue';
 
 export default {
@@ -18,6 +22,9 @@ export default {
     return {
       mobile: false,
     };
+  },
+  computed: {
+    ...mapState('invoices', ['modal']),
   },
   methods: {
     checkScreen() {
@@ -34,6 +41,7 @@ export default {
   },
   components: {
     Navigation,
+    InvoiceModal,
     MobileMessage,
   },
 };

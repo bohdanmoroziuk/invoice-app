@@ -16,7 +16,7 @@
             <li>Clear Filter</li>
           </ul>
         </div>
-        <div class="button flex">
+        <div class="button flex" @click="openModal">
           <div class="inner-button flex">
             <img src="@/assets/images/icon-plus.svg" alt="">
           </div>
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'Home',
   data() {
@@ -36,6 +38,8 @@ export default {
     };
   },
   methods: {
+    ...mapMutations('invoices', ['openModal']),
+
     toggleMenu() {
       this.menu = !this.menu;
     },
