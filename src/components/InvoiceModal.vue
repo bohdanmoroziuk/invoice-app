@@ -161,9 +161,14 @@
 </template>
 
 <script>
+/* eslint-disable no-alert */
+/* eslint-disable no-useless-return */
+
 import { mapMutations } from 'vuex';
 
 import { nanoid } from 'nanoid';
+
+import { firestore } from '@/firebase';
 
 export default {
   name: 'InvoiceModal',
@@ -195,13 +200,19 @@ export default {
       invoicePending: null,
       invoiceDraft: null,
       invoiceItemList: [],
-      invoiceTotal: 0,
     };
   },
   watch: {
     paymentTerms: {
       immediate: true,
       handler: 'generatePaymentDueDate',
+    },
+  },
+  computed: {
+    invoiceTotal() {
+      return this.invoiceItemList.reduce((total, item) => (
+        Number.isNaN(item.total) ? total : total + item.total
+      ), 0);
     },
   },
   methods: {
@@ -231,6 +242,50 @@ export default {
     },
     deleteInvoiceItem(id) {
       this.invoiceItemList = this.invoiceItemList.filter((item) => item.id !== id);
+    },
+    publishInvoice() {
+      this.invoicePending = true;
+    },
+    saveDraft() {
+      this.invoiceDraft = true;
+    },
+    async uploadInvoice() {
+      if (this.invoiceItemList.length === 0) {
+        alert('Please ensure you filled out work items!');
+        return;
+      }
+
+      const invoices = firestore.collection('invoices').doc();
+
+      await invoices.set({
+        invoiceId: nanoid(),
+        billerStreetAddress: this.billerStreetAddress,
+        billerCity: this.billerCity,
+        billerZipCode: this.billerZipCode,
+        billerCountry: this.billerCountry,
+        clientName: this.clientName,
+        clientEmail: this.clientEmail,
+        clientStreetAddress: this.clientStreetAddress,
+        clientCity: this.clientCity,
+        clientZipCode: this.clientZipCode,
+        clientCountry: this.clientCountry,
+        invoiceDate: this.invoiceDate,
+        invoiceDateUnix: this.invoiceDateUnix,
+        paymentTerms: this.paymentTerms,
+        paymentDueDate: this.paymentDueDate,
+        paymentDueDateUnix: this.paymentDueDateUnix,
+        productDescription: this.productDescription,
+        invoiceItemList: this.invoiceItemList,
+        invoiceTotal: this.invoiceTotal,
+        invoicePending: this.invoicePending,
+        invoiceDraft: this.invoiceDraft,
+        invoicePaid: null,
+      });
+
+      this.closeModal();
+    },
+    async submit() {
+      await this.uploadInvoice();
     },
   },
   created() {
