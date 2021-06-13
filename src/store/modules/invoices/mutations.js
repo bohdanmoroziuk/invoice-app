@@ -14,4 +14,13 @@ export default {
   deactivate: (state) => {
     state.active = false;
   },
+  addInvoice: (state, invoice) => {
+    state.invoices = [
+      invoice,
+      ...state.invoices,
+    ];
+  },
+  setLoading: (state, loading) => {
+    state.loading = loading;
+  },
 };

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import Navigation from '@/components/Navigation.vue';
 import InvoiceModal from '@/components/InvoiceModal.vue';
@@ -33,15 +33,18 @@ export default {
     ...mapState('invoices', ['modal', 'active']),
   },
   methods: {
+    ...mapActions('invoices', ['getInvoices']),
 
     checkScreen() {
       this.mobile = window.innerWidth <= 750;
     },
   },
-  created() {
+  async created() {
     this.checkScreen();
 
     window.addEventListener('resize', this.checkScreen);
+
+    await this.getInvoices();
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.checkScreen);
