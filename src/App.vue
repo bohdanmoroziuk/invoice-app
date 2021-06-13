@@ -8,6 +8,8 @@
       <transition name="invoice">
         <invoice-modal v-if="modal" />
       </transition>
+
+      <exit-confirmation-dialog v-if="active" />
     </div>
   </div>
 </template>
@@ -18,6 +20,7 @@ import { mapState } from 'vuex';
 import Navigation from '@/components/Navigation.vue';
 import InvoiceModal from '@/components/InvoiceModal.vue';
 import MobileMessage from '@/components/MobileMessage.vue';
+import ExitConfirmationDialog from '@/components/ExitConfirmationDialog.vue';
 
 export default {
   name: 'App',
@@ -27,9 +30,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('invoices', ['modal']),
+    ...mapState('invoices', ['modal', 'active']),
   },
   methods: {
+
     checkScreen() {
       this.mobile = window.innerWidth <= 750;
     },
@@ -46,6 +50,7 @@ export default {
     Navigation,
     InvoiceModal,
     MobileMessage,
+    ExitConfirmationDialog,
   },
 };
 </script>

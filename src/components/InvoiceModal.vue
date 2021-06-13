@@ -220,7 +220,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('invoices', ['closeModal']),
+    ...mapMutations('invoices', ['closeModal', 'activate']),
 
     formatDate(value) {
       return new Date(value).toLocaleDateString('uk', this.dateOptions);
@@ -294,6 +294,11 @@ export default {
     },
     async submit() {
       await this.uploadInvoice();
+    },
+    check(event) {
+      if (event.target === this.$refs.invoiceWrap) {
+        this.activate();
+      }
     },
   },
   created() {

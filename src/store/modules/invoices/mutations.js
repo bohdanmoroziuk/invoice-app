@@ -8,4 +8,10 @@ export default {
   toggleModal: (state) => {
     state.modal = !state.modal;
   },
+  activate: (state) => {
+    state.active = true;
+  },
+  deactivate: (state) => {
+    state.active = false;
+  },
 };
