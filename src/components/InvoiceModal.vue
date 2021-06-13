@@ -8,6 +8,8 @@
       class="invoice-content"
       @submit.prevent="submit"
     >
+      <spinner v-if="loading" />
+
       <h1>New Incoive</h1>
 
       <!-- Bill From -->
@@ -170,6 +172,8 @@ import { nanoid } from 'nanoid';
 
 import { firestore } from '@/firebase';
 
+import Spinner from '@/components/Spinner.vue';
+
 export default {
   name: 'InvoiceModal',
   data() {
@@ -180,7 +184,7 @@ export default {
         day: 'numeric',
       },
       docId: null,
-      loading: null,
+      loading: false,
       billerStreetAddress: null,
       billerCity: null,
       billerZipCode: null,
@@ -257,6 +261,8 @@ export default {
 
       const invoices = firestore.collection('invoices').doc();
 
+      this.loading = true;
+
       await invoices.set({
         invoiceId: nanoid(),
         billerStreetAddress: this.billerStreetAddress,
@@ -282,6 +288,8 @@ export default {
         invoicePaid: null,
       });
 
+      this.loading = false;
+
       this.closeModal();
     },
     async submit() {
@@ -290,6 +298,9 @@ export default {
   },
   created() {
     this.generateInvoiceDate();
+  },
+  components: {
+    Spinner,
   },
 };
 </script>
