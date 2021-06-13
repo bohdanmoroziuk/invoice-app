@@ -151,11 +151,11 @@
       <!-- Save/Exit -->
       <div class="save flex">
         <div class="left">
-          <button class="bg-red" @click="closeModal">Cancel</button>
+          <button class="bg-red" type="button" @click="closeModal">Cancel</button>
         </div>
         <div class="right">
-          <button class="bg-dark-purple" @click="saveDraft">Save Draft</button>
-          <button class="bg-purple" @click="publishInvoice">Create Invoice</button>
+          <button class="bg-dark-purple" type="submit" @click="saveDraft">Save Draft</button>
+          <button class="bg-purple" type="submit" @click="publishInvoice">Create Invoice</button>
         </div>
       </div>
     </form>
