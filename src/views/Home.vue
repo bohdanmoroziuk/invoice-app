@@ -24,11 +24,21 @@
         </div>
       </div>
     </header>
+
+    <main>
+      <invoice-card
+        v-for="invoice of invoices"
+        :key="invoice.invoiceId"
+        :invoice="invoice"
+      />
+    </main>
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
+
+import InvoiceCard from '@/components/InvoiceCard.vue';
 
 export default {
   name: 'Home',
@@ -37,12 +47,18 @@ export default {
       menu: false,
     };
   },
+  computed: {
+    ...mapState('invoices', ['invoices']),
+  },
   methods: {
     ...mapMutations('invoices', ['openModal']),
 
     toggleMenu() {
       this.menu = !this.menu;
     },
+  },
+  components: {
+    InvoiceCard,
   },
 };
 </script>
