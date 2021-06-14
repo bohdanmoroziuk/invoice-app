@@ -237,7 +237,7 @@ export default {
     },
     addNewInvoiceItem() {
       this.invoiceItemList.push({
-        id: nanoid(),
+        id: nanoid(6),
         name: '',
         qty: 0,
         price: 0,
@@ -264,7 +264,7 @@ export default {
       this.loading = true;
 
       await invoices.set({
-        invoiceId: nanoid(),
+        invoiceId: nanoid(6),
         billerStreetAddress: this.billerStreetAddress,
         billerCity: this.billerCity,
         billerZipCode: this.billerZipCode,
