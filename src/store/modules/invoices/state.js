@@ -3,4 +3,5 @@ export default {
   active: false,
   invoices: [],
   loading: false,
+  invoice: {},
 };

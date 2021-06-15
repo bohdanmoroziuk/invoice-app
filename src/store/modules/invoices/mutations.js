@@ -23,4 +23,7 @@ export default {
   setLoading: (state, loading) => {
     state.loading = loading;
   },
+  setInvoice: (state, id) => {
+    state.invoice = state.invoices.find((invoice) => invoice.invoiceId === id);
+  },
 };
