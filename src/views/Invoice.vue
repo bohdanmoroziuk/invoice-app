@@ -147,7 +147,12 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('invoices', ['setInvoice']),
+    ...mapMutations('invoices', ['setInvoice', 'toggleModal', 'toggleEditMode']),
+
+    toggleMode() {
+      this.toggleEditMode();
+      this.toggleModal();
+    },
   },
 };
 </script>

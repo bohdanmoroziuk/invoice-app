@@ -26,4 +26,13 @@ export default {
   setInvoice: (state, id) => {
     state.invoice = state.invoices.find((invoice) => invoice.invoiceId === id);
   },
+  activateEditMode(state) {
+    state.isEditMode = true;
+  },
+  deactivateEditMode(state) {
+    state.isEditMode = false;
+  },
+  toggleEditMode(state) {
+    state.isEditMode = !state.isEditMode;
+  },
 };

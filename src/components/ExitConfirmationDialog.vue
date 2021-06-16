@@ -11,12 +11,19 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'ExitConfirmationDialog',
+  computed: {
+    ...mapState('invoices', ['isEditMode']),
+  },
   methods: {
-    ...mapMutations('invoices', ['deactivate', 'closeModal']),
+    ...mapMutations('invoices', [
+      'deactivate',
+      'closeModal',
+      'deactivateEditMode',
+    ]),
 
     cancel() {
       this.deactivate();
@@ -24,6 +31,10 @@ export default {
     confirm() {
       this.deactivate();
       this.closeModal();
+
+      if (this.isEditMode) {
+        this.deactivateEditMode();
+      }
     },
   },
 };

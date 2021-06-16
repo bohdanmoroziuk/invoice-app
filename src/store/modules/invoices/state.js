@@ -4,4 +4,5 @@ export default {
   invoices: [],
   loading: false,
   invoice: {},
+  isEditMode: false,
 };

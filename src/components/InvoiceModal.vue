@@ -10,7 +10,7 @@
     >
       <spinner v-if="loading" />
 
-      <h1>New Incoive</h1>
+      <h1>{{ title }}</h1>
 
       <!-- Bill From -->
 
@@ -151,11 +151,16 @@
       <!-- Save/Exit -->
       <div class="save flex">
         <div class="left">
-          <button class="bg-red" type="button" @click="closeModal">Cancel</button>
+          <button class="bg-red" type="button" @click="close">Cancel</button>
         </div>
-        <div class="right">
-          <button class="bg-dark-purple" type="submit" @click="saveDraft">Save Draft</button>
-          <button class="bg-purple" type="submit" @click="publishInvoice">Create Invoice</button>
+        <div class="right flex">
+          <template v-if="isEditMode">
+            <button class="bg-purple" type="submit" @click="updateInvoice">Update Invoice</button>
+          </template>
+          <template v-else>
+            <button class="bg-dark-purple" type="submit" @click="saveDraft">Save Draft</button>
+            <button class="bg-purple" type="submit" @click="publishInvoice">Create Invoice</button>
+          </template>
         </div>
       </div>
     </form>
@@ -166,7 +171,7 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-useless-return */
 
-import { mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 import { nanoid } from 'nanoid';
 
@@ -213,6 +218,12 @@ export default {
     },
   },
   computed: {
+    ...mapState('invoices', ['isEditMode']),
+
+    title() {
+      return this.isEditMode ? 'Edit Invoice' : 'New Invoice';
+    },
+
     invoiceTotal() {
       return this.invoiceItemList.reduce((total, item) => (
         Number.isNaN(item.total) ? total : total + item.total
@@ -220,7 +231,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('invoices', ['closeModal', 'activate']),
+    ...mapMutations('invoices', [
+      'closeModal',
+      'activate',
+      'deactivateEditMode',
+    ]),
 
     formatDate(value) {
       return new Date(value).toLocaleDateString('uk', this.dateOptions);
@@ -290,7 +305,7 @@ export default {
 
       this.loading = false;
 
-      this.closeModal();
+      this.close();
     },
     async submit() {
       await this.uploadInvoice();
@@ -298,6 +313,13 @@ export default {
     check(event) {
       if (event.target === this.$refs.invoiceWrap) {
         this.activate();
+      }
+    },
+    close() {
+      this.closeModal();
+
+      if (this.isEditMode) {
+        this.deactivateEditMode();
       }
     },
   },
