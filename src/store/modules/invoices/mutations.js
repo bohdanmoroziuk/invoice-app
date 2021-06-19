@@ -38,4 +38,23 @@ export default {
   deleteInvoice(state, id) {
     state.invoices = state.invoices.filter((invoice) => invoice.docId !== id);
   },
+  updateStatusToPaid: (state, docId) => {
+    state.invoices = state.invoices.map((invoice) => (
+      invoice.docId === docId
+        ? { ...invoice, invoicePaid: true, invoicePending: false }
+        : invoice
+    ));
+  },
+  updateStatusToPending: (state, docId) => {
+    state.invoices = state.invoices.map((invoice) => (
+      invoice.docId === docId
+        ? {
+          ...invoice,
+          invoicePaid: false,
+          invoiceDraft: false,
+          invoicePending: true,
+        }
+        : invoice
+    ));
+  },
 };

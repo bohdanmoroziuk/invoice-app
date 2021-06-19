@@ -34,4 +34,25 @@ export default {
     await invoice.delete();
     commit('deleteInvoice', docId);
   },
+  updateStatusToPaid: async ({ commit }, docId) => {
+    const invoice = firestore.collection('invoices').doc(docId);
+
+    await invoice.update({
+      invoicePaid: true,
+      invoicePending: false,
+    });
+
+    commit('updateStatusToPaid', docId);
+  },
+  updateStatusToPending: async ({ commit }, docId) => {
+    const invoice = firestore.collection('invoices').doc(docId);
+
+    await invoice.update({
+      invoicePaid: false,
+      invoiceDraft: false,
+      invoicePending: true,
+    });
+
+    commit('updateStatusToPending', docId);
+  },
 };

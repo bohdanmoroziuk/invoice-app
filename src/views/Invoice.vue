@@ -35,14 +35,14 @@
         <button
           v-if="invoice.invoicePending"
           class="bg-green"
-          @click="updateStatusToPaid"
+          @click="updateStatusToPaid(invoice.docId)"
         >
           Mark as Paid
         </button>
         <button
           v-if="invoice.invoiceDraft || invoice.invoicePaid"
           class="bg-orange"
-          @click="updateStatusToPending"
+          @click="updateStatusToPending(invoice.docId)"
         >
           Mark as Pending
         </button>
@@ -154,8 +154,16 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('invoices', ['setInvoice', 'toggleModal', 'toggleEditMode']),
-    ...mapActions('invoices', ['deleteInvoice']),
+    ...mapMutations('invoices', [
+      'setInvoice',
+      'toggleModal',
+      'toggleEditMode',
+    ]),
+    ...mapActions('invoices', [
+      'deleteInvoice',
+      'updateStatusToPaid',
+      'updateStatusToPending',
+    ]),
 
     toggleMode() {
       this.toggleEditMode();
