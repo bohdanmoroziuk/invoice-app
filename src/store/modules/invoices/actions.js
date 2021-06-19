@@ -28,4 +28,10 @@ export default {
     commit('toggleEditMode');
     commit('setInvoice', invoiceId);
   },
+  deleteInvoice: async ({ commit }, docId) => {
+    const invoice = firestore.collection('invoices').doc(docId);
+
+    await invoice.delete();
+    commit('deleteInvoice', docId);
+  },
 };

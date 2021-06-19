@@ -28,7 +28,7 @@
         </button>
         <button
           class="bg-red"
-          @click="deleteInvoice"
+          @click="handleInvoiceDelete"
         >
           Delete
         </button>
@@ -115,7 +115,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'Invoice',
@@ -155,10 +155,16 @@ export default {
   },
   methods: {
     ...mapMutations('invoices', ['setInvoice', 'toggleModal', 'toggleEditMode']),
+    ...mapActions('invoices', ['deleteInvoice']),
 
     toggleMode() {
       this.toggleEditMode();
       this.toggleModal();
+    },
+    async handleInvoiceDelete() {
+      await this.deleteInvoice(this.invoice.docId);
+
+      this.$router.push('/').catch(() => {});
     },
   },
 };
