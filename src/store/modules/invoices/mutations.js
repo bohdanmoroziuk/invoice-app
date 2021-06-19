@@ -35,4 +35,7 @@ export default {
   toggleEditMode(state) {
     state.isEditMode = !state.isEditMode;
   },
+  deleteInvoice(state, id) {
+    state.invoices = state.invoices.filter((invoice) => invoice.docId !== id);
+  },
 };

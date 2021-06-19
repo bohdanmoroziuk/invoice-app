@@ -171,7 +171,7 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-useless-return */
 
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 import { nanoid } from 'nanoid';
 
@@ -218,7 +218,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('invoices', ['isEditMode']),
+    ...mapState('invoices', ['isEditMode', 'invoice']),
 
     title() {
       return this.isEditMode ? 'Edit Invoice' : 'New Invoice';
@@ -236,6 +236,7 @@ export default {
       'activate',
       'deactivateEditMode',
     ]),
+    ...mapActions('invoices', ['editInvoice']),
 
     formatDate(value) {
       return new Date(value).toLocaleDateString('uk', this.dateOptions);
@@ -307,8 +308,50 @@ export default {
 
       this.close();
     },
+    async updateInvoice() {
+      if (this.invoiceItemList.length === 0) {
+        alert('Please ensure you filled out work items!');
+        return;
+      }
+
+      this.loading = true;
+
+      const invoices = firestore.collection('invoices').doc(this.docId);
+
+      await invoices.update({
+        billerStreetAddress: this.billerStreetAddress,
+        billerCity: this.billerCity,
+        billerZipCode: this.billerZipCode,
+        billerCountry: this.billerCountry,
+        clientName: this.clientName,
+        clientEmail: this.clientEmail,
+        clientStreetAddress: this.clientStreetAddress,
+        clientCity: this.clientCity,
+        clientZipCode: this.clientZipCode,
+        clientCountry: this.clientCountry,
+        paymentTerms: this.paymentTerms,
+        paymentDueDate: this.paymentDueDate,
+        paymentDueDateUnix: this.paymentDueDateUnix,
+        productDescription: this.productDescription,
+        invoiceItemList: this.invoiceItemList,
+        invoiceTotal: this.invoiceTotal,
+      });
+
+      this.loading = false;
+
+      const data = {
+        docId: this.docId,
+        invoiceId: this.$route.params.invoiceId,
+      };
+
+      this.editInvoice(data);
+    },
     async submit() {
-      await this.uploadInvoice();
+      if (this.isEditMode) {
+        await this.updateInvoice();
+      } else {
+        await this.uploadInvoice();
+      }
     },
     check(event) {
       if (event.target === this.$refs.invoiceWrap) {
@@ -324,7 +367,30 @@ export default {
     },
   },
   created() {
-    this.generateInvoiceDate();
+    if (this.isEditMode) {
+      this.docId = this.invoice.docId;
+      this.billerStreetAddress = this.invoice.billerStreetAddress;
+      this.billerCity = this.invoice.billerCity;
+      this.billerZipCode = this.invoice.billerZipCode;
+      this.billerCountry = this.invoice.billerCountry;
+      this.clientName = this.invoice.clientName;
+      this.clientEmail = this.invoice.clientEmail;
+      this.clientStreetAddress = this.invoice.clientStreetAddress;
+      this.clientCity = this.invoice.clientCity;
+      this.clientZipCode = this.invoice.clientZipCode;
+      this.clientCountry = this.invoice.clientCountry;
+      this.invoiceDateUnix = this.invoice.invoiceDateUnix;
+      this.invoiceDate = this.invoice.invoiceDate;
+      this.paymentTerms = this.invoice.paymentTerms;
+      this.paymentDueDateUnix = this.invoice.paymentDueDateUnix;
+      this.paymentDueDate = this.invoice.paymentDueDate;
+      this.productDescription = this.invoice.productDescription;
+      this.invoicePending = this.invoice.invoicePending;
+      this.invoiceDraft = this.invoice.invoiceDraft;
+      this.invoiceItemList = this.invoice.invoiceItemList;
+    } else {
+      this.generateInvoiceDate();
+    }
   },
   components: {
     Spinner,

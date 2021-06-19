@@ -130,9 +130,16 @@ export default {
       immediate: true,
       handler: 'setInvoice',
     },
+    isEditMode: {
+      handler(isEditMode) {
+        if (!isEditMode) {
+          this.setInvoice(this.id);
+        }
+      },
+    },
   },
   computed: {
-    ...mapState('invoices', ['invoice']),
+    ...mapState('invoices', ['invoice', 'isEditMode']),
 
     status() {
       if (this.invoice.invoicePaid) return 'paid';

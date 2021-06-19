@@ -19,4 +19,13 @@ export default {
 
     commit('setLoading', false);
   },
+  editInvoice: async ({ commit, dispatch }, { docId, invoiceId }) => {
+    commit('deleteInvoice', docId);
+
+    await dispatch('getInvoices');
+
+    commit('toggleModal');
+    commit('toggleEditMode');
+    commit('setInvoice', invoiceId);
+  },
 };
