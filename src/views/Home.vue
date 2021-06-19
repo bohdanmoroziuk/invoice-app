@@ -3,17 +3,17 @@
     <header class="header flex">
       <div class="left flex flex-column">
         <h2>Invoices</h2>
-        <span>There are 4 total invoices</span>
+        <span>There are {{ invoices.length }} total invoices</span>
       </div>
       <div class="right flex">
         <div class="filter flex" @click="toggleMenu">
-          <span>Filter by status</span>
+          <span>Filter by status: <span v-if="status">{{ status }}</span></span>
           <img src="@/assets/images/icon-arrow-down.svg" alt="">
           <ul class="filter-menu" v-show="menu">
-            <li>Draft</li>
-            <li>Pending</li>
-            <li>Paid</li>
-            <li>Clear Filter</li>
+            <li @click="setStatus('draft')">Draft</li>
+            <li @click="setStatus('pending')">Pending</li>
+            <li @click="setStatus('paid')">Paid</li>
+            <li @click="setStatus('')">Clear Filter</li>
           </ul>
         </div>
         <div class="button flex" @click="openModal">
@@ -27,7 +27,7 @@
 
     <main v-if="hasInvoices">
       <invoice-card
-        v-for="invoice of invoices"
+        v-for="invoice of filteredInvoices"
         :key="invoice.invoiceId"
         :invoice="invoice"
       />
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 import InvoiceCard from '@/components/InvoiceCard.vue';
 
@@ -50,17 +50,36 @@ export default {
   data() {
     return {
       menu: false,
+      status: null,
     };
   },
   computed: {
     ...mapState('invoices', ['invoices']),
-    ...mapGetters('invoices', ['hasInvoices']),
+
+    hasInvoices() {
+      return this.filteredInvoices.length > 0;
+    },
+    filteredInvoices() {
+      if (this.status === 'draft') {
+        return this.invoices.filter((invoice) => invoice.invoiceDraft);
+      }
+      if (this.status === 'pending') {
+        return this.invoices.filter((invoice) => invoice.invoicePending);
+      }
+      if (this.status === 'paid') {
+        return this.invoices.filter((invoice) => invoice.invoicePaid);
+      }
+      return this.invoices.slice();
+    },
   },
   methods: {
     ...mapMutations('invoices', ['openModal']),
 
     toggleMenu() {
       this.menu = !this.menu;
+    },
+    setStatus(status) {
+      this.status = status;
     },
   },
   components: {
