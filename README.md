@@ -1,5 +1,11 @@
 # invoice-app
 
+> An application for managing invoices.
+
+## Preview
+
+<img src="./invoice-app.png" alt="invoice-app" />
+
 ## Project setup
 ```
 npm install
@@ -24,6 +30,3 @@ npm run test:unit
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
